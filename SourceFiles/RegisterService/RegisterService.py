@@ -5,7 +5,7 @@ class RegisterService():
     _instance = None
 
     def __init__(self):
-        self.__configPath = "RegisterService/config.json"
+        self.__configPath = "config.json"
 
     def __new__(class_, *args, **kwargs):
         if not isinstance(class_._instance, class_):

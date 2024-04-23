@@ -1,7 +1,14 @@
-import RegisterService.RegisterService as rs
-import BotConstructions.bot as bc
+import SourceFiles.RegisterService.RegisterService as register
+import SourceFiles.BotConstructions.bot as constructions
+#import SourceFiles.MusicCore.LocalStorageMusicHandler as core
+import SourceFiles.MusicCore.YouTubeMusicHandler as core
 
-rs.RegisterService().LoadConfiguration()
+register.RegisterService().LoadConfiguration()
 
-bot = bc.MusicBot()
+#core = core.LocalStorageMusicHandler()
+core = core.YouTubeMusicHandler()
+
+bot = constructions.MusicBot(core)
 bot.run()
+
+#hexogonal architecture
