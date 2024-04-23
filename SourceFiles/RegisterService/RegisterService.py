@@ -29,5 +29,8 @@ class RegisterService():
     def GetPrefix(self):
         return self.data["prefix"]
     
+    def GetBotName(self):
+        return self.data["name"]
+    
 
 

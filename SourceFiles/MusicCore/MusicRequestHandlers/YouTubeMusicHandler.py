@@ -5,6 +5,7 @@ import operator
 import os
 from difflib import SequenceMatcher
 from pytube import YouTube
+from pytube import Search
 
 from .IMusicRequestHandler import IMusicRequestHandler
 
@@ -17,11 +18,15 @@ class YouTubeMusicHandler(IMusicRequestHandler):
         
     def getSoundByLink(self, link: str):
         filePath = self.download(link)
-        audio = discord.FFmpegPCMAudio(executable= "./ExternalExe/ffmpeg.exe", source= filePath)
+        audio = discord.FFmpegPCMAudio(executable= "./FFmpegExe/ffmpeg.exe", source= filePath)
         return audio
         
     def getSoundByName(self, name: str):
-        return None
+        search = Search(name)
+        url = search.results[0].watch_url
+        filePath = self.download(url)
+        audio = discord.FFmpegPCMAudio(executable= "./FFmpegExe/ffmpeg.exe", source= filePath)
+        return audio
 
     def download(self, link):
         youtubeObject = YouTube(link)

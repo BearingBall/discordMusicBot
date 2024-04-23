@@ -2,22 +2,29 @@ import discord
 from discord.ext import commands
 
 from ..RegisterService import RegisterService as rs
-from ..MusicCore import IMusicRequestHandler
+from ..MusicCore.MusicManager import MusicManager
+from ..MusicCore.MusicPlayers.DiscordMusicPlayer import DiscordMusicPlayer
 from .botUtils import BotUtils
 
-from asyncio import sleep
-
 class MusicBot():
-    def __init__(self, handler: IMusicRequestHandler):
-        self.handler = handler
+    def __init__(self, manager: MusicManager):
+        self.manager = manager
 
         intents = discord.Intents.default()
         intents.message_content = True
         self.bot = commands.Bot(command_prefix=rs.RegisterService().GetPrefix(), intents=intents)
+        self.name = rs.RegisterService().GetBotName()
+        self.channel = None
+        self.voiceClient = None
 
         @self.bot.event
         async def on_ready():
             print("Music bot available")
+
+        @self.bot.event
+        async def on_voice_state_update(member, before, after):
+            if (member.name == self.name):
+                self.channel = after.channel
 
         @self.bot.command(name="alive?")
         async def ping(ctx):
@@ -27,22 +34,12 @@ class MusicBot():
         async def play(ctx, args):
 
             print("Asked play command from", ctx.author)
-            voiceClient = await BotUtils.connectUserVoiceChannel(ctx)
-            print("Connecting success")
+            if (self.channel != ctx.author.voice.channel):
+                self.voiceClient = await BotUtils.connectUserVoiceChannel(ctx)
+                manager.setPlayer(DiscordMusicPlayer(self.voiceClient))
+                print("Channel connected")
 
-            audio = await handler.getSound(args)
-
-            if (audio is not None):
-                voiceClient.play(audio)
-
-                while voiceClient.is_playing():
-                    await sleep(1)
-
-            else:
-                print("Audio handler failure")
-
-            print("Disconnecting...")
-            await voiceClient.disconnect()
+            await manager.registerPlayRequest(ctx, args)
             
     def run(self):
         self.bot.run(rs.RegisterService().GetToken())

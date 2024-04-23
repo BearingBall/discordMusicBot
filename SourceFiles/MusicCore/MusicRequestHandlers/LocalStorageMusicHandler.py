@@ -28,6 +28,6 @@ class LocalStorageMusicHandler(IMusicRequestHandler):
             return None
         
         trackPath = os.path.join(localMusicPath, musicSimilarityRating[0][1])
-        audio = discord.FFmpegPCMAudio(executable= "./ExternalExe/ffmpeg.exe", source= trackPath)
+        audio = discord.FFmpegPCMAudio(executable= "./FFmpegExe/ffmpeg.exe", source= trackPath)
         return audio
     
