@@ -21,12 +21,28 @@ class MusicManager():
         if audioFile == None:
             print("Manager: audio does not found")
 
-        #self.musicQueue.append(audioFile)
-        await self.player.play(audioFile)
+        self.musicQueue.append(audioFile)
 
+        if (self.player.isPlaying()):
+            return len(self.musicQueue)
 
+        trackIdx = 0
+        while(trackIdx < len(self.musicQueue)):
+            track = self.musicQueue[trackIdx]
+            await self.player.play(track)
+            trackIdx = trackIdx + 1
 
+        return 0
 
+    def stop(self):
+        self.musicQueue.clear()
+        self.player.stop()
+
+    def pause(self):
+        self.player.pause()
+
+    def resume(self):
+        self.player.resume()
 
 
 
@@ -34,12 +50,6 @@ class MusicManager():
         pass
 
     async def playQueue():
-        pass
-
-    def pausePlaying():
-        pass
-
-    def stopPlaying():
         pass
 
     def nextTrack():

@@ -8,7 +8,17 @@ class DiscordMusicPlayer(IMusicPlayer):
     async def play(self, audio):
         self.voiceClient.play(audio)
 
-        while self.voiceClient.is_playing():
+        while self.isPlaying():
             await sleep(1)
 
-        #await voiceClient.disconnect()
+    def isPlaying(self):
+        return self.voiceClient.is_playing()
+
+    def pause(self):
+        self.voiceClient.pause()
+
+    def resume(self):
+        self.voiceClient.resume()
+
+    def stop(self):
+        self.voiceClient.stop()

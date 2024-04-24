@@ -1,17 +1,17 @@
 
 class IMusicPlayer():
-    def isPlaying():
+    def isPlaying(self):
         pass
 
-    async def play(audio):
+    async def play(self, audio):
         pass
 
-    def pause():
+    def pause(self):
         pass
 
-    def unpause():
+    def resume(self):
         pass
 
-    def stopP():
+    def stop(self):
         pass
     

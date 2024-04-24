@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord.ui import Button, View
 
 from ..RegisterService import RegisterService as rs
 from ..MusicCore.MusicManager import MusicManager
@@ -39,8 +40,34 @@ class MusicBot():
                 manager.setPlayer(DiscordMusicPlayer(self.voiceClient))
                 print("Channel connected")
 
-            await manager.registerPlayRequest(ctx, args)
-            
+            queueLen = await manager.registerPlayRequest(ctx, args)
+
+            if (queueLen == 0):
+                await self.voiceClient.disconnect()
+
+        @self.bot.command(name="stop")
+        async def stop(ctx):
+            manager.stop()
+
+        @self.bot.command(name="pause")
+        async def pause(ctx):
+            manager.pause()
+
+        @self.bot.command(name="resume")
+        async def resume(ctx):
+            manager.resume()
+
+        @self.bot.command(name="test")
+        async def test(ctx):
+
+            async def button_callback(interaction):
+                await interaction.response.edit_message(content='Button clicked!', view=None)
+
+            button = Button(custom_id='button1', label='WOW button!', style=discord.ButtonStyle.green)
+            button.callback = button_callback
+
+            await ctx.send('Hello World!', view=View(button))
+
     def run(self):
         self.bot.run(rs.RegisterService().GetToken())
 
