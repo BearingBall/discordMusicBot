@@ -1,9 +1,10 @@
 
 class IMusicPlayer():
+
     def isPlaying(self):
         pass
 
-    async def play(self, audio):
+    def play(self, ctx, audio):
         pass
 
     def pause(self):

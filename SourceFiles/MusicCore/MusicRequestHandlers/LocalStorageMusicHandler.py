@@ -5,17 +5,18 @@ import operator
 import os
 from difflib import SequenceMatcher
 
+from ..AudioTrack import AudioTrack
 from .IMusicRequestHandler import IMusicRequestHandler
 
 class LocalStorageMusicHandler(IMusicRequestHandler):
-    async def getSound(self, arguments):
+    async def getSound(self, arguments) -> AudioTrack:
         if (validators.url(arguments)):
             print("LocalStorage: link does not supported")
             return None
         else:
             return self.getSoundByName(arguments)
 
-    def getSoundByName(self, name: str):
+    def getSoundByName(self, name: str) -> AudioTrack:
         localMusicPath = "./LocalMusic"
 
         localMusicList = os.listdir(localMusicPath)
@@ -27,7 +28,8 @@ class LocalStorageMusicHandler(IMusicRequestHandler):
             print("File not found")
             return None
         
-        trackPath = os.path.join(localMusicPath, musicSimilarityRating[0][1])
-        audio = discord.FFmpegPCMAudio(executable= "./FFmpegExe/ffmpeg.exe", source= trackPath)
-        return audio
+        musicName = musicSimilarityRating[0][1]
+        trackPath = os.path.join(localMusicPath, musicName)
+
+        return AudioTrack(trackPath, musicName)
     

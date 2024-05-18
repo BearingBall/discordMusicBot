@@ -7,37 +7,37 @@ from difflib import SequenceMatcher
 from pytube import YouTube
 from pytube import Search
 
+from ..AudioTrack import AudioTrack
 from .IMusicRequestHandler import IMusicRequestHandler
 
 class YouTubeMusicHandler(IMusicRequestHandler):
-    async def getSound(self, arguments):
+    async def getSound(self, arguments) -> AudioTrack:
         if (validators.url(arguments)):
             return self.getSoundByLink(arguments)
         else:
             return self.getSoundByName(arguments)
         
-    def getSoundByLink(self, link: str):
-        filePath = self.download(link)
-        audio = discord.FFmpegPCMAudio(executable= "./FFmpegExe/ffmpeg.exe", source= filePath)
-        return audio
+    def getSoundByLink(self, link: str) -> AudioTrack:
+        (name, path) = self.download(link)
+        return AudioTrack(path, name)
         
-    def getSoundByName(self, name: str):
+    def getSoundByName(self, name: str) -> AudioTrack:
         search = Search(name)
         url = search.results[0].watch_url
-        filePath = self.download(url)
-        audio = discord.FFmpegPCMAudio(executable= "./FFmpegExe/ffmpeg.exe", source= filePath)
-        return audio
+        (name, path) = self.download(url)
+        return AudioTrack(path, name)
 
     def download(self, link):
         youtubeObject = YouTube(link)
-        youtubeObject = youtubeObject.streams.get_audio_only()
+        title = youtubeObject.title
+        audio = youtubeObject.streams.get_audio_only()
 
         downloadPath = "./DownloadedFiles"
 
         try:
-            outputPath = youtubeObject.download(downloadPath)
+            outputPath = audio.download(downloadPath)
         except:
             print("YouTube: downloading error")
         print("YouTube: Download is completed")
 
-        return outputPath
+        return (title, outputPath)
