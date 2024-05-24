@@ -7,6 +7,7 @@ from difflib import SequenceMatcher
 
 from ..AudioTrack import AudioTrack
 from .IMusicRequestHandler import IMusicRequestHandler
+from ...PathManager.PathManager import PathMannager
 
 class LocalStorageMusicHandler(IMusicRequestHandler):
     async def getSound(self, arguments) -> AudioTrack:
@@ -17,16 +18,18 @@ class LocalStorageMusicHandler(IMusicRequestHandler):
             return self.getSoundByName(arguments)
 
     def getSoundByName(self, name: str) -> AudioTrack:
-        localMusicPath = "./LocalMusic"
+        localMusicPath = "./" + PathMannager().GetLocalMusicFolderPath()
 
         localMusicList = os.listdir(localMusicPath)
 
         musicSimilarityRating = [(SequenceMatcher(None, musicName, name).ratio(), musicName) for musicName in localMusicList]
         musicSimilarityRating.sort(key=operator.itemgetter(0), reverse=True)
         
-        if (musicSimilarityRating[0][0] < 0.5 and (musicSimilarityRating[0][0] - musicSimilarityRating[1][0]) < 0.15):
+        if (musicSimilarityRating[0][0] < 0.5): #and (musicSimilarityRating[0][0] - musicSimilarityRating[1][0]) < 0.15):
             print("File not found")
             return None
+        else:
+            print("Found local track with similarity: ", musicSimilarityRating[0][0])
         
         musicName = musicSimilarityRating[0][1]
         trackPath = os.path.join(localMusicPath, musicName)

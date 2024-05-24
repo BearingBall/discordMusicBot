@@ -1,12 +1,9 @@
 import json
-import os.path
+from ..PathManager.PathManager import PathMannager
 
 class RegisterService():
     _instance = None
-
-    def __init__(self):
-        self.__configPath = "config.json"
-
+    
     def __new__(class_, *args, **kwargs):
         if not isinstance(class_._instance, class_):
             class_._instance = object.__new__(class_, *args, **kwargs)
@@ -15,7 +12,7 @@ class RegisterService():
     def LoadConfiguration(self):
 
         try:
-            f = open(self.__configPath)
+            f = open(PathMannager().GetConfigFilePath())
             self.data = json.load(f)
             f.close()
             print("Config loading success")

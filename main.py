@@ -13,5 +13,3 @@ handler = assembly.AssemblyMusicHandler([localHandler.LocalStorageMusicHandler()
 core = manager.MusicManager(handler)
 bot = constructions.MusicBot(core)
 bot.run()
-
-#hexogonal architecture

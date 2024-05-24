@@ -9,6 +9,7 @@ from pytube import Search
 
 from ..AudioTrack import AudioTrack
 from .IMusicRequestHandler import IMusicRequestHandler
+from ...PathManager.PathManager import PathMannager
 
 class YouTubeMusicHandler(IMusicRequestHandler):
     async def getSound(self, arguments) -> AudioTrack:
@@ -32,7 +33,7 @@ class YouTubeMusicHandler(IMusicRequestHandler):
         title = youtubeObject.title
         audio = youtubeObject.streams.get_audio_only()
 
-        downloadPath = "./DownloadedFiles"
+        downloadPath = "./" + PathMannager().GetDownloadedMusicFolderPath()
 
         try:
             outputPath = audio.download(downloadPath)
